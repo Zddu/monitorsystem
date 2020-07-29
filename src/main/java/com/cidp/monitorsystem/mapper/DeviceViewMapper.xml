@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.DeviceViewMapper">
+
+    <select id="selectCupByIp" resultType="com.cidp.monitorsystem.model.Cpu">
+         select * from cpu where ip = #{ip} order by time asc
+    </select>
+    <select id="selectMemoryByIp" resultType="com.cidp.monitorsystem.model.Memory">
+        select * from memory where ip = #{ip} order by time asc
+    </select>
+
+    <select id="selectInterfaceByIp" resultType="com.cidp.monitorsystem.model.Interface">
+        select ip,ifDescr from interface where ip = #{ip}
+    </select>
+    <select id="selectInterfaceflowByInter" resultType="com.cidp.monitorsystem.model.InterFlow">
+        select * from InterFlow where ip = #{ip} and  interDescr = #{interDescr} order by time asc
+    </select>
+    <select id="getDevice" resultType="com.cidp.monitorsystem.model.SystemInfo">
+        select ip , name from system where sysObjectID &lt;&gt; 'SNMP未响应'
+    </select>
+    <select id="selecAllInfaceFlow" resultType="com.cidp.monitorsystem.model.InterFlow">
+       select ip,time,round(sum(inFlow),2) as inFlow,round(sum(outFlow),2) as outFlow,round(sum(inLoss),2) as inLoss,round(sum(outLoss),2) as outLoss,round(sum(inRate),2) as inRate,round(sum(outRate)) as outRate,round(sum(inErrorRate),2) as inErrorRate,round(sum(outErrorRate),2) as outErrorRate
+       from InterFlow where ip = #{ip} group by ip,time
+    </select>
+    <select id="selectInterfaceFilterVlanByIp" resultType="com.cidp.monitorsystem.model.Interface">
+      select ip,ifDescr from interface where ip = #{ip} and ifDescr not like '%VLAN%'
+    </select>
+    <select id="selectInfaceInfoFilterEmptydata" resultType="com.cidp.monitorsystem.model.Interface">
+        select ip,interDescr as ifDescr from InterFlow where ip = #{ip} group by InterFlow.interDescr having (sum(inFlow) <![CDATA[ <> ]]> 0 or sum(outFlow) <![CDATA[ <> ]]> 0 or sum(inLoss) <![CDATA[ <> ]]> 0 or sum(outLoss) <![CDATA[ <> ]]> 0 or sum(inRate) <![CDATA[ <> ]]> 0 or sum(outRate) <![CDATA[ <> ]]> 0 or sum(inErrorRate) <![CDATA[ <> ]]> 0 or sum(outErrorRate) <![CDATA[ <> ]]> 0)
+    </select>
+</mapper>
