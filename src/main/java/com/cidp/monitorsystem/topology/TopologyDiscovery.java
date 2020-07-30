@@ -4,6 +4,7 @@ import com.cidp.monitorsystem.mapper.EdgeMapper;
 import com.cidp.monitorsystem.mapper.IpAddrTableMapper;
 import com.cidp.monitorsystem.mapper.IpRouteTableMapper;
 import com.cidp.monitorsystem.mapper.NodeMapper;
+import com.cidp.monitorsystem.model.InterfaceOfMac;
 import com.cidp.monitorsystem.model.SystemInfo;
 import com.cidp.monitorsystem.service.InterfaceOfMacService;
 import com.cidp.monitorsystem.service.InterfaceService;
@@ -148,18 +149,26 @@ public class TopologyDiscovery {
     }
 
     public void deviceDiscoveryByMac() throws Exception {
-        String [] oids= {"1.3.6.1.2.1.2.2.1.1"};
+        String [] macs= {"1.3.6.1.2.1.2.2.1.6"};
+        String [] indexs= {"1.3.6.1.2.1.2.2.1.1"};
         //1.获取所有活跃设备
         List<String> activeDevices =  systemService.getAllActDevice();
+        List<InterfaceOfMac> ofMacs = new ArrayList<>();
         for (String ip : activeDevices) {
             SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
-            if(issnmp.getIsSnmpGet(PDU.GET,ip).get(0).equals("-1")){
+            if (issnmp.snmpWalk2(macs) == null||issnmp.snmpWalk2(indexs) == null){
                 continue;
             }
-            if (issnmp.snmpWalk2(oids) == null){
-                continue;
+            ArrayList<String> listMac = issnmp.snmpWalk2(macs);
+            ArrayList<String> indexlist = issnmp.snmpWalk2(indexs);
+            for (int i = 0; i < listMac.size(); i++) {
+                InterfaceOfMac item = new InterfaceOfMac();
+                item.setIp(ip);
+                item.setIndex(indexlist.get(i));
+                item.setIfmac(listMac.get(i));
+                ofMacs.add(item);
             }
-            macService.addMac(issnmp.snmpWalk2(oids));
         }
+        macService.addMac(ofMacs);
     }
 }

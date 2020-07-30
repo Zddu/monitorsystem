@@ -1,9 +1,10 @@
 package com.cidp.monitorsystem.mapper;
 
+import com.cidp.monitorsystem.model.InterfaceOfMac;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface InterfaceOfMacMapper {
-    void addMac(@Param("list") ArrayList<String> list);
+    void addMac(@Param("list") List<InterfaceOfMac> list);
 }
