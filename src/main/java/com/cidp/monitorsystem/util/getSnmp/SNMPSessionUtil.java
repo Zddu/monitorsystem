@@ -141,6 +141,7 @@ public class SNMPSessionUtil {
             } else {
                 System.out.println(this.hostComputer+"网络不通或者配置有误！");
 //                throw new NullPointerException("被监控系统的网络不通或IP或其它相关配置错识！");
+                return null;
             }
         }
         return mapList;
