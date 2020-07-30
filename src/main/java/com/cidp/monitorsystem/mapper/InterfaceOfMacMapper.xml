@@ -5,7 +5,7 @@
     <insert id="addMac">
         insert into interface_mac(ip,index,ifmac)
         values
-        <foreach collection="list" item="item" index="index" separator=",">
+        <foreach collection="list" item="item" index="interface" separator=",">
             (
             #{item.ip},
             #{item.index},
