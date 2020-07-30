@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cidp.monitorsystem.mapper.MacForwardMapper">
 
+    <insert id="addMac">
+        insert into address_forward(ip,port,mac)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ip},
+            #{item.port},
+            #{item.mac}
+            )
+        </foreach>
+    </insert>
 </mapper>

@@ -5,11 +5,14 @@ import com.cidp.monitorsystem.mapper.IpAddrTableMapper;
 import com.cidp.monitorsystem.mapper.IpRouteTableMapper;
 import com.cidp.monitorsystem.mapper.NodeMapper;
 import com.cidp.monitorsystem.model.InterfaceOfMac;
+import com.cidp.monitorsystem.model.MacForward;
 import com.cidp.monitorsystem.model.SystemInfo;
 import com.cidp.monitorsystem.service.InterfaceOfMacService;
 import com.cidp.monitorsystem.service.InterfaceService;
+import com.cidp.monitorsystem.service.MacForwardService;
 import com.cidp.monitorsystem.service.SystemService;
 import com.cidp.monitorsystem.util.getSnmp.SNMPSessionUtil;
+import org.mybatis.spring.annotation.MapperScan;
 import org.snmp4j.PDU;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,6 +41,8 @@ public class TopologyDiscovery {
     SystemService systemService;
     @Autowired
     InterfaceOfMacService macService;
+    @Autowired
+    MacForwardService forwardService;
 
     public Node deviceSerach(String ip) throws Exception {
         SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
@@ -148,7 +153,7 @@ public class TopologyDiscovery {
 
     }
 
-    public void deviceDiscoveryByMac() throws Exception {
+    public void deviceInterfaceMac() throws Exception {
         String [] macs= {"1.3.6.1.2.1.2.2.1.6"};
         String [] indexs= {"1.3.6.1.2.1.2.2.1.1"};
         //1.获取所有活跃设备
@@ -171,4 +176,36 @@ public class TopologyDiscovery {
         }
         macService.addMac(ofMacs);
     }
+
+    public void deviceMacForward(){
+        String [] macs= {"1.3.6.1.2.1.17.4.3.1.1"};
+        String [] port= {"1.3.6.1.2.1.17.4.3.1.2"};
+        List<String> activeDevices =  systemService.getAllActDevice();
+        List<MacForward> forwards = new ArrayList<>();
+        for (String ip : activeDevices) {
+            SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
+            if (issnmp.snmpWalk2(macs) == null||issnmp.snmpWalk2(port) == null){
+                continue;
+            }
+            if (issnmp.snmpWalk2(macs).size() == 0||issnmp.snmpWalk2(port).size() == 0){
+                continue;
+            }
+            ArrayList<String> listMac = issnmp.snmpWalk2(macs);
+            ArrayList<String> indexlist = issnmp.snmpWalk2(port);
+            for (int i = 0; i < listMac.size(); i++) {
+                MacForward item = new MacForward();
+                item.setIp(ip);
+                item.setPort(indexlist.get(i).substring(indexlist.get(i).lastIndexOf("=")).replace("=","").trim());
+                item.setMac(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
+                forwards.add(item);
+            }
+        }
+        forwardService.addMac(forwards);
+
+    }
+
+    public void indexRelatePort(){
+
+    }
+
 }
