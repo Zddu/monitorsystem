@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class MacForward {
     private String mac;
-    private String index;
+    private String ifindex;
 }
