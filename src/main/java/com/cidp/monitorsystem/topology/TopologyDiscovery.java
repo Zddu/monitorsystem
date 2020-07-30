@@ -164,7 +164,7 @@ public class TopologyDiscovery {
             for (int i = 0; i < listMac.size(); i++) {
                 InterfaceOfMac item = new InterfaceOfMac();
                 item.setIp(ip);
-                item.setIndex(indexlist.get(i));
+                item.setIfindex(indexlist.get(i));
                 item.setIfmac(listMac.get(i));
                 ofMacs.add(item);
             }

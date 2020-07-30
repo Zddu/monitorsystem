@@ -3,12 +3,12 @@
 <mapper namespace="com.cidp.monitorsystem.mapper.InterfaceOfMacMapper">
 
     <insert id="addMac">
-        insert into interface_mac(ip,index,ifmac)
+        insert into interface_mac(ip,ifindex,ifmac)
         values
         <foreach collection="list" item="item" index="interface" separator=",">
             (
             #{item.ip},
-            #{item.index},
+            #{item.ifindex},
             #{item.ifmac}
             )
         </foreach>

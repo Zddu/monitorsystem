@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class InterfaceOfMac {
     private String ip;
-    private String index;
+    private String ifindex;
     private String ifmac;
 }
