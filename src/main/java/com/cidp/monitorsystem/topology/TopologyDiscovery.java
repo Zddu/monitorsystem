@@ -216,6 +216,7 @@ public class TopologyDiscovery {
             ArrayList<String> portlist = issnmp.snmpWalk2(port);
             for (int i = 0; i < listMac.size(); i++) {
                 IndexPortRelate relate = new IndexPortRelate();
+                relate.setIp(ip);
                 relate.setPort(portlist.get(i).substring(portlist.get(i).lastIndexOf("=")).replace("=","").trim());
                 relate.setIfindex(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
                 relates.add(relate);

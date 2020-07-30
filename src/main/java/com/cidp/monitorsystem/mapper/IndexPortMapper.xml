@@ -3,10 +3,11 @@
 <mapper namespace="com.cidp.monitorsystem.mapper.IndexPortMapper">
 
     <insert id="addRelate">
-        insert into index_relation_port(port,ifindex)
+        insert into index_relation_port(ip,port,ifindex)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
+            #{item.ip},
             #{item.port},
             #{item.ifindex}
             )
