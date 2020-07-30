@@ -154,8 +154,8 @@ public class TopologyDiscovery {
         //1.获取所有活跃设备
         List<String> activeDevices =  systemService.getAllActDevice();
         List<InterfaceOfMac> ofMacs = new ArrayList<>();
-        for (String ip : activeDevices) {
-            SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
+        for (int j =0;j<activeDevices.size();j++) {
+            SNMPSessionUtil issnmp = new SNMPSessionUtil(activeDevices.get(j), "161", "public", "2");
             if (issnmp.snmpWalk2(macs) == null||issnmp.snmpWalk2(indexs) == null){
                 continue;
             }
@@ -163,7 +163,7 @@ public class TopologyDiscovery {
             ArrayList<String> indexlist = issnmp.snmpWalk2(indexs);
             for (int i = 0; i < listMac.size(); i++) {
                 InterfaceOfMac item = new InterfaceOfMac();
-                item.setIp(ip);
+                item.setIp(activeDevices.get(j));
                 item.setIfindex(indexlist.get(i).substring(indexlist.get(i).lastIndexOf("=")).replace("=","").trim());
                 item.setIfmac(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
                 ofMacs.add(item);
