@@ -19,4 +19,6 @@ public interface SystemInfoMapper {
     List<SystemInfo> getAllDevice();
 
     Integer updateDevice(SystemInfo deviceType);
+
+    List<String> getAllActDevice();
 }

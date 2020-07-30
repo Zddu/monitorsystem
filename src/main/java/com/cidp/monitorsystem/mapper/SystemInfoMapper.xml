@@ -31,4 +31,7 @@
     <select id="getAllDevice" resultType="com.cidp.monitorsystem.model.SystemInfo">
         select id,ip,typeName,name,icon from system
     </select>
+    <select id="getAllActDevice" resultType="java.lang.String">
+        SELECT ip from system where sysService != 'SNMP未响应'
+    </select>
 </mapper>

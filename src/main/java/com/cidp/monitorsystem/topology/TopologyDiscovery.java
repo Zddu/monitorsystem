@@ -4,7 +4,10 @@ import com.cidp.monitorsystem.mapper.EdgeMapper;
 import com.cidp.monitorsystem.mapper.IpAddrTableMapper;
 import com.cidp.monitorsystem.mapper.IpRouteTableMapper;
 import com.cidp.monitorsystem.mapper.NodeMapper;
+import com.cidp.monitorsystem.model.SystemInfo;
+import com.cidp.monitorsystem.service.InterfaceOfMacService;
 import com.cidp.monitorsystem.service.InterfaceService;
+import com.cidp.monitorsystem.service.SystemService;
 import com.cidp.monitorsystem.util.getSnmp.SNMPSessionUtil;
 import org.snmp4j.PDU;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,12 @@ public class TopologyDiscovery {
     InterfaceService interfaceService;
     @Autowired
     EdgeMapper edgeMapper;
+    @Autowired
+    SystemService systemService;
+    @Autowired
+    InterfaceOfMacService macService;
 
-    public Node findNode(String ip) throws Exception {
+    public Node deviceSerach(String ip) throws Exception {
         SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
         ArrayList<String> isSnmpGet = issnmp.getIsSnmpGet(PDU.GET, ".1.3.6.1.2.1.1.3");
         ipRouteTableMapper.deleteAll();
@@ -138,5 +145,21 @@ public class TopologyDiscovery {
             return node;
         }
 
+    }
+
+    public void deviceDiscoveryByMac() throws Exception {
+        String [] oids= {"1.3.6.1.2.1.2.2.1.1"};
+        //1.获取所有活跃设备
+        List<String> activeDevices =  systemService.getAllActDevice();
+        for (String ip : activeDevices) {
+            SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
+            if(issnmp.getIsSnmpGet(PDU.GET,ip).get(0).equals("-1")){
+                continue;
+            }
+            if (issnmp.snmpWalk2(oids) == null){
+                continue;
+            }
+            macService.addMac(issnmp.snmpWalk2(oids));
+        }
     }
 }

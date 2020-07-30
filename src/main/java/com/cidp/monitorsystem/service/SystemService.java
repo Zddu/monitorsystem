@@ -30,7 +30,7 @@ public class SystemService {
     @Autowired
     SystemInfoMapper systemInfoMapper;
 
-    public void system(List<String> ip) throws Exception {
+    public void deviceSearchByips(List<String> ip) throws Exception {
         List<CompletableFuture<List<String>>> completableFutures = new ArrayList<>();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        List<PingSuccess> ip = pingMapper.selectIsSnmp();
@@ -121,5 +121,10 @@ public class SystemService {
 
     public Integer updateDevice(SystemInfo deviceType) {
         return systemInfoMapper.updateDevice(deviceType);
+    }
+
+
+    public List<String> getAllActDevice() {
+        return systemInfoMapper.getAllActDevice();
     }
 }

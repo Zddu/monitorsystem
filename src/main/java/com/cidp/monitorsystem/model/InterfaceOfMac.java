@@ -1,0 +1,10 @@
+package com.cidp.monitorsystem.model;
+
+import lombok.Data;
+
+@Data
+public class InterfaceOfMac {
+    private String ip;
+    private String index;
+    private String ifmac;
+}
