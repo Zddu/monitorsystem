@@ -1,16 +1,11 @@
 package com.cidp.monitorsystem.topology;
 
-import com.cidp.monitorsystem.mapper.EdgeMapper;
-import com.cidp.monitorsystem.mapper.IpAddrTableMapper;
-import com.cidp.monitorsystem.mapper.IpRouteTableMapper;
-import com.cidp.monitorsystem.mapper.NodeMapper;
+import com.cidp.monitorsystem.mapper.*;
+import com.cidp.monitorsystem.model.IndexPortRelate;
 import com.cidp.monitorsystem.model.InterfaceOfMac;
 import com.cidp.monitorsystem.model.MacForward;
 import com.cidp.monitorsystem.model.SystemInfo;
-import com.cidp.monitorsystem.service.InterfaceOfMacService;
-import com.cidp.monitorsystem.service.InterfaceService;
-import com.cidp.monitorsystem.service.MacForwardService;
-import com.cidp.monitorsystem.service.SystemService;
+import com.cidp.monitorsystem.service.*;
 import com.cidp.monitorsystem.util.getSnmp.SNMPSessionUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.snmp4j.PDU;
@@ -43,6 +38,8 @@ public class TopologyDiscovery {
     InterfaceOfMacService macService;
     @Autowired
     MacForwardService forwardService;
+    @Autowired
+    IndexPortService indexPortService;
 
     public Node deviceSerach(String ip) throws Exception {
         SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
@@ -205,7 +202,26 @@ public class TopologyDiscovery {
     }
 
     public void indexRelatePort(){
+        String [] ifindex= {"1.3.6.1.2.1.17.1.4.1.2"};
+        String [] port= {"1.3.6.1.2.1.17.1.4.1.1"};
 
+        List<String> actDevice =  systemService.getAllActDevice();
+        List<IndexPortRelate> relates = new ArrayList<>();
+        for (String ip : actDevice) {
+            SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
+            if (issnmp.snmpWalk2(ifindex) == null||issnmp.snmpWalk2(port) == null ||issnmp.snmpWalk2(ifindex).size() == 0||issnmp.snmpWalk2(port).size() == 0){
+                continue;
+            }
+            ArrayList<String> listMac = issnmp.snmpWalk2(ifindex);
+            ArrayList<String> portlist = issnmp.snmpWalk2(port);
+            for (int i = 0; i < listMac.size(); i++) {
+                IndexPortRelate relate = new IndexPortRelate();
+                relate.setPort(portlist.get(i).substring(portlist.get(i).lastIndexOf("=")).replace("=","").trim());
+                relate.setIfindex(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
+                relates.add(relate);
+            }
+        }
+        indexPortService.addRelate(relates);
     }
 
 }
