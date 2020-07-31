@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cidp.monitorsystem.mapper.NeighborMacMapper">
     <insert id="addRemMac">
-        insert into neigbhor_mac(ip,remmac)
+        insert into neighbor_mac(ip,remmac)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (

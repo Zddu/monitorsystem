@@ -162,11 +162,15 @@ public class TopologyDiscovery {
             }
             ArrayList<String> listMac = issnmp.snmpWalk2(macs);
             ArrayList<String> indexlist = issnmp.snmpWalk2(indexs);
+            List<String> hasmac = new ArrayList<>();
             for (int i = 0; i < listMac.size(); i++) {
+                String mac = listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=", "").trim();
+                if (hasmac.contains(mac)) continue;
+                hasmac.add(mac);
                 InterfaceOfMac item = new InterfaceOfMac();
                 item.setIp(activeDevices.get(j));
                 item.setIfindex(indexlist.get(i).substring(indexlist.get(i).lastIndexOf("=")).replace("=","").trim());
-                item.setIfmac(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
+                item.setIfmac(mac);
                 ofMacs.add(item);
             }
             macService.addMac(ofMacs);
@@ -228,7 +232,6 @@ public class TopologyDiscovery {
         String[] lldpmac = {"1.0.8802.1.1.2.1.4.1.1.5"};//邻居物理地址
         List<String> actDevice =  systemService.getAllActDevice();
         for (String ip : actDevice) {
-            boolean isexist =  neighborMacService.getRemMac(ip);
             List<NeighborMac> neighborMacs = new ArrayList<>();
             SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
             if (issnmp.snmpWalk2(lldpmac) == null||issnmp.snmpWalk2(lldpmac).size() == 0){
