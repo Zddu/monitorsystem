@@ -127,4 +127,8 @@ public class SystemService {
     public List<String> getAllActDevice() {
         return systemInfoMapper.getAllActDevice();
     }
+
+    public List<SystemInfo> getAllL2Device() {
+        return systemInfoMapper.getAllL2Device();
+    }
 }

@@ -21,4 +21,7 @@ public interface SystemInfoMapper {
     Integer updateDevice(SystemInfo deviceType);
 
     List<String> getAllActDevice();
+
+    List<SystemInfo> getAllL2Device();
+
 }

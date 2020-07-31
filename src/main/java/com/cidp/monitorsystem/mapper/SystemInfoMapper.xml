@@ -34,4 +34,7 @@
     <select id="getAllActDevice" resultType="java.lang.String">
         SELECT ip from system where sysService != 'SNMP未响应'
     </select>
+    <select id="getAllL2Device" resultType="com.cidp.monitorsystem.model.SystemInfo">
+        select * from system where typeName ='二层交换机'
+    </select>
 </mapper>

@@ -1,10 +1,7 @@
 package com.cidp.monitorsystem.topology;
 
 import com.cidp.monitorsystem.mapper.*;
-import com.cidp.monitorsystem.model.IndexPortRelate;
-import com.cidp.monitorsystem.model.InterfaceOfMac;
-import com.cidp.monitorsystem.model.MacForward;
-import com.cidp.monitorsystem.model.SystemInfo;
+import com.cidp.monitorsystem.model.*;
 import com.cidp.monitorsystem.service.*;
 import com.cidp.monitorsystem.util.getSnmp.SNMPSessionUtil;
 import org.mybatis.spring.annotation.MapperScan;
@@ -40,8 +37,10 @@ public class TopologyDiscovery {
     MacForwardService forwardService;
     @Autowired
     IndexPortService indexPortService;
+    @Autowired
+    NeighborMacService neighborMacService;
 
-    public Node deviceSerach(String ip) throws Exception {
+    public Node deviceSearch(String ip) throws Exception {
         SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
         ArrayList<String> isSnmpGet = issnmp.getIsSnmpGet(PDU.GET, ".1.3.6.1.2.1.1.3");
         ipRouteTableMapper.deleteAll();
@@ -155,8 +154,8 @@ public class TopologyDiscovery {
         String [] indexs= {"1.3.6.1.2.1.2.2.1.1"};
         //1.获取所有活跃设备
         List<String> activeDevices =  systemService.getAllActDevice();
-        List<InterfaceOfMac> ofMacs = new ArrayList<>();
         for (int j =0;j<activeDevices.size();j++) {
+            List<InterfaceOfMac> ofMacs = new ArrayList<>();
             SNMPSessionUtil issnmp = new SNMPSessionUtil(activeDevices.get(j), "161", "public", "2");
             if (issnmp.snmpWalk2(macs) == null||issnmp.snmpWalk2(indexs) == null){
                 continue;
@@ -170,16 +169,16 @@ public class TopologyDiscovery {
                 item.setIfmac(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
                 ofMacs.add(item);
             }
+            macService.addMac(ofMacs);
         }
-        macService.addMac(ofMacs);
     }
 
     public void deviceMacForward(){
         String [] macs= {"1.3.6.1.2.1.17.4.3.1.1"};
         String [] port= {"1.3.6.1.2.1.17.4.3.1.2"};
         List<String> activeDevices =  systemService.getAllActDevice();
-        List<MacForward> forwards = new ArrayList<>();
         for (String ip : activeDevices) {
+            List<MacForward> forwards = new ArrayList<>();
             SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
             if (issnmp.snmpWalk2(macs) == null||issnmp.snmpWalk2(port) == null){
                 continue;
@@ -196,8 +195,8 @@ public class TopologyDiscovery {
                 item.setMac(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
                 forwards.add(item);
             }
+            forwardService.addMac(forwards);
         }
-        forwardService.addMac(forwards);
 
     }
 
@@ -206,8 +205,8 @@ public class TopologyDiscovery {
         String [] port= {"1.3.6.1.2.1.17.1.4.1.1"};
 
         List<String> actDevice =  systemService.getAllActDevice();
-        List<IndexPortRelate> relates = new ArrayList<>();
         for (String ip : actDevice) {
+            List<IndexPortRelate> relates = new ArrayList<>();
             SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
             if (issnmp.snmpWalk2(ifindex) == null||issnmp.snmpWalk2(port) == null ||issnmp.snmpWalk2(ifindex).size() == 0||issnmp.snmpWalk2(port).size() == 0){
                 continue;
@@ -221,8 +220,52 @@ public class TopologyDiscovery {
                 relate.setIfindex(listMac.get(i).substring(listMac.get(i).lastIndexOf("=")).replace("=","").trim());
                 relates.add(relate);
             }
+            indexPortService.addRelate(relates);
         }
-        indexPortService.addRelate(relates);
+    }
+
+    public void neighborMac(){
+        String[] lldpmac = {"1.0.8802.1.1.2.1.4.1.1.5"};//邻居物理地址
+        List<String> actDevice =  systemService.getAllActDevice();
+        for (String ip : actDevice) {
+            boolean isexist =  neighborMacService.getRemMac(ip);
+            List<NeighborMac> neighborMacs = new ArrayList<>();
+            SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
+            if (issnmp.snmpWalk2(lldpmac) == null||issnmp.snmpWalk2(lldpmac).size() == 0){
+                continue;
+            }
+            List<String> lldpmacs = issnmp.snmpWalk2(lldpmac);
+            List<String> exist = new ArrayList<>();
+            for (String item : lldpmacs) {
+                String mac = item.substring(item.lastIndexOf("=")).replace("=", "").trim();
+                if (exist.contains(mac)) continue;
+                exist.add(mac);
+                NeighborMac neighborMac = new NeighborMac();
+                neighborMac.setIp(ip);
+                neighborMac.setRemmac(mac);
+                neighborMacs.add(neighborMac);
+            }
+            neighborMacService.addRemMac(neighborMacs);
+        }
+
+    }
+
+    public void deviceSearch(String ...ips){
+        //
+
+    }
+
+    public void deviceSearch(String startIp,String endIp){
+
+    }
+
+    public void connectivelyOfL2ToL2(){
+        //1.得到所有L2设备集合
+        List<SystemInfo>  listOfL2 = systemService.getAllL2Device();
+        for (SystemInfo info : listOfL2) {
+            System.out.println(info.getIp());
+
+        }
     }
 
 }

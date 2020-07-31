@@ -22,5 +22,7 @@ public class SystemInfo {
     private String selfDecs;//设备描述
     private String typeName;//设备类型
     private String name;//设备名称
+    private String community;//团体名
     private String icon;//设备图标
+    private String version;
 }

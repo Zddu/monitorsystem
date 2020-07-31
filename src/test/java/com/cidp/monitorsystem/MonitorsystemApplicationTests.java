@@ -20,14 +20,8 @@ class MonitorsystemApplicationTests {
     InterfaceOfMacMapper macMapper;
     @Test
     void contextLoads() throws Exception {
-//        topologyDiscovery.deviceDiscoveryByMac();
-        List<InterfaceOfMac> list = new ArrayList<>();
-        InterfaceOfMac mac = new InterfaceOfMac();
-        mac.setIp("1111");
-        mac.setIfmac("1112");
-        mac.setIfindex("1");
-        list.add(mac);
-        macMapper.addMac(list);
+        topologyDiscovery.connectivelyOfL2ToL2();
+
     }
 
 }
