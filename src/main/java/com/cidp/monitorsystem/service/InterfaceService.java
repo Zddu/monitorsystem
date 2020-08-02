@@ -34,6 +34,7 @@ public class InterfaceService {
         String [] oids7= {".1.3.6.1.2.1.2.2.1.6"};//接口Mac
         ArrayList<String> list7 = inter.snmpWalk2(oids7);
         List<Interface> list = new ArrayList<>();
+        if (list0==null||list1==null||list2==null||list3==null||list4==null||list5==null||list6==null||list7==null) return;
         for (int i = 0;i<list0.size();i++){
             anInterface = new Interface();
             String replace0 = list0.get(i).substring(list0.get(i).lastIndexOf("=")).replace("=", "").trim();
