@@ -14,4 +14,5 @@ public class Interface {
     private String IfAdminStatus;//接口期待的状态，此字段可以控制网络设备端口的开启或关闭
     private String IfSpeed;//接口带宽 单位比特 b
     private String IfMtu;//接口最大数据单元
+    private String IfMac;//接口mac
 }

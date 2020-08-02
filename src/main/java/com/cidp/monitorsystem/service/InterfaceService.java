@@ -31,6 +31,8 @@ public class InterfaceService {
         ArrayList<String> list5 = inter.snmpWalk2(oids5);
         String[] oids6 = {".1.3.6.1.2.1.2.2.1.1"};//接口索引
         ArrayList<String> list6 = inter.snmpWalk2(oids6);
+        String [] oids7= {".1.3.6.1.2.1.2.2.1.6"};//接口Mac
+        ArrayList<String> list7 = inter.snmpWalk2(oids7);
         List<Interface> list = new ArrayList<>();
         for (int i = 0;i<list0.size();i++){
             anInterface = new Interface();
@@ -41,6 +43,7 @@ public class InterfaceService {
             String replace4 = list4.get(i).substring(list4.get(i).lastIndexOf("=")).replace("=", "").trim();
             String replace5 = list5.get(i).substring(list5.get(i).lastIndexOf("=")).replace("=", "").trim();
             String replace6 = list6.get(i).substring(list6.get(i).lastIndexOf("=")).replace("=", "").trim();
+            String replace7 = list7.get(i).substring(list7.get(i).lastIndexOf("=")).replace("=", "").trim();
             anInterface.setIp(ip);
             anInterface.setIfindex(replace6);
             anInterface.setIfDescr(replace0);
@@ -49,6 +52,7 @@ public class InterfaceService {
             anInterface.setIfAdminStatus(replace3);
             anInterface.setIfSpeed(replace4);
             anInterface.setIfMtu(replace5);
+            anInterface.setIfMac(replace7);
             list.add(anInterface);
         }
         interfaceMapper.insert(list);

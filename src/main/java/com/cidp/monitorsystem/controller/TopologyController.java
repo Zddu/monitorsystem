@@ -27,6 +27,7 @@ public class TopologyController {
     public List<SystemInfo> getNodes(){
         return systemService.getAllActNode();
     }
+
 }
 
 

@@ -100,7 +100,7 @@ public class TopologyDiscovery {
                 } else {
                     ipAddrTableMapper.insertError(node1.getIp());
                 }
-                nodeMapper.insert(node1.getIp(), node1.getParentId());
+
                 String ip1 = node1.getIp();
                 IpRouteTable ipRouteTable;
                 SNMPSessionUtil nextip = new SNMPSessionUtil(ip1, "161", "public", "2");
@@ -151,7 +151,12 @@ public class TopologyDiscovery {
         }
 
     }
-
+    public void getDeviceInterInfo() throws Exception {
+        List<String> activeDevices =  systemService.getAllActDevice();
+        for (String ip : activeDevices) {
+            interfaceService.GetInterInfo(ip);
+        }
+    }
     public void deviceInterfaceMac() throws Exception {
         String [] macs= {"1.3.6.1.2.1.2.2.1.6"};
         String [] indexs= {"1.3.6.1.2.1.2.2.1.1"};
