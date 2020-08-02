@@ -24,4 +24,6 @@ public interface SystemInfoMapper {
 
     List<SystemInfo> getAllL2Device();
 
+    List<SystemInfo> getAllActNode();
+
 }

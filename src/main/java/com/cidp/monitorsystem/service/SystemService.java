@@ -128,6 +128,10 @@ public class SystemService {
         return systemInfoMapper.getAllActDevice();
     }
 
+    public List<SystemInfo> getAllActNode() {
+        return systemInfoMapper.getAllActNode();
+    }
+
     public List<SystemInfo> getAllL2Device() {
         return systemInfoMapper.getAllL2Device();
     }

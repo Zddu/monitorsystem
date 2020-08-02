@@ -18,7 +18,7 @@
 
     </select>
     <select id="selectNewDiagnosis" resultType="com.cidp.monitorsystem.model.Diagnosis">
-        select * from diagnosis where DATE_FORMAT(time,"%Y-%m-%d")=DATE_FORMAT(now(),"%Y-%m-%d")  order by time desc limit 10
+        select * from diagnosis  order by time desc limit 10
     </select>
     <select id="selectEquipmentStatistics" resultType="com.cidp.monitorsystem.model.SeriesData">
         select typeName as name,count(typeName) as value from system where system.typeName not in ('SNMP服务配置有误','未知设备') group by system.typeName
@@ -28,9 +28,9 @@
         select zhpoint  as name ,count(zhpoint) as value from (select ip,zhpoint from snmptrap union all select ip,zhtype as zhpoint from diagnosis,point where diagnosis.pid = point.id ) as tab group by zhpoint
     </select>
     <select id="selectCpu" resultType="com.cidp.monitorsystem.model.Cpu">
-        select * from cpu where ip = #{ip} and  DATE_FORMAT(time,"%Y-%m-%d")=DATE_FORMAT(now(),"%Y-%m-%d") order by time desc limit 5
+        select * from cpu where ip = #{ip}  order by time desc limit 5
     </select>
     <select id="selectMemory" resultType="com.cidp.monitorsystem.model.Memory">
-        select * from memory where ip = #{ip} and  DATE_FORMAT(time,"%Y-%m-%d")=DATE_FORMAT(now(),"%Y-%m-%d") order by time desc limit 5
+        select * from memory where ip = #{ip}  order by time desc limit 5
     </select>
 </mapper>

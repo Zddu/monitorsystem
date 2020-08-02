@@ -20,7 +20,8 @@ class MonitorsystemApplicationTests {
     InterfaceOfMacMapper macMapper;
     @Test
     void contextLoads() throws Exception {
-        topologyDiscovery.connectivelyOfL2ToL2();
+//        topologyDiscovery.connectivelyOfL2ToL2();
+        topologyDiscovery.connectOfAll();
 
     }
 

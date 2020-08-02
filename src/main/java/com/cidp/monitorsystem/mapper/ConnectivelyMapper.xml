@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.ConnectivelyMapper">
+    <insert id="addConnect">
+        insert into connectively(sip,dip,difindex)
+        values (#{sip},#{dip},#{difindex})
+    </insert>
+    <select id="getConnect" resultType="com.cidp.monitorsystem.model.Connectively">
+        SELECT nm.ip as sip,im.ip as dip,im.ifindex as difindex from neighbor_mac nm LEFT JOIN interface_mac im ON
+          nm.remmac = im.ifmac where im.id is not null
+    </select>
+    <select id="hsaSip2Dip" resultType="com.cidp.monitorsystem.model.Connectively">
+        select sip,dip,difindex from connectively where sip=#{sip} and dip= #{dip}
+    </select>
+    <select id="hasDip2Sip" resultType="com.cidp.monitorsystem.model.Connectively">
+        select sip,dip,difindex from connectively where sip=#{dip} and dip= #{sip}
+    </select>
+    <select id="getTrimConnect" resultType="com.cidp.monitorsystem.model.Connectively">
+        select  * from connectively
+    </select>
+</mapper>

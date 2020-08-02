@@ -37,4 +37,7 @@
     <select id="getAllL2Device" resultType="com.cidp.monitorsystem.model.SystemInfo">
         select * from system where typeName ='二层交换机'
     </select>
+    <select id="getAllActNode" resultType="com.cidp.monitorsystem.model.SystemInfo">
+        SELECT * from system where sysService != 'SNMP未响应'
+    </select>
 </mapper>

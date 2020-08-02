@@ -3,6 +3,7 @@ package com.cidp.monitorsystem.topology;
 import com.cidp.monitorsystem.mapper.*;
 import com.cidp.monitorsystem.model.*;
 import com.cidp.monitorsystem.service.*;
+import com.cidp.monitorsystem.service.dispservice.ConnectivelyService;
 import com.cidp.monitorsystem.util.getSnmp.SNMPSessionUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.snmp4j.PDU;
@@ -39,6 +40,8 @@ public class TopologyDiscovery {
     IndexPortService indexPortService;
     @Autowired
     NeighborMacService neighborMacService;
+    @Autowired
+    ConnectivelyService connectivelyService;
 
     public Node deviceSearch(String ip) throws Exception {
         SNMPSessionUtil issnmp = new SNMPSessionUtil(ip, "161", "public", "2");
@@ -270,5 +273,18 @@ public class TopologyDiscovery {
 
         }
     }
+
+    public void connectOfAll(){
+        List<Connectively> connectivelies = connectivelyService.getConnect();
+        for (Connectively con : connectivelies) {
+            Connectively connectively = new Connectively();
+            connectively.setSip(con.getSip());
+            connectively.setDip(con.getDip());
+            connectively.setDifindex(con.getDifindex());
+            if (connectivelyService.hasSip2Dip(con.getSip(),con.getDip()) || connectivelyService.hasDip2Sip(con.getDip(),con.getSip())) continue;
+            connectivelyService.addConnect(connectively);
+        }
+    }
+
 
 }
