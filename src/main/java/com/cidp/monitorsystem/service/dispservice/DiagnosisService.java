@@ -57,8 +57,6 @@ public class DiagnosisService {
             d.setCause(sping.substring(sping.indexOf("。")).replace("。", "").trim());
             diagnosisMapper.insertByDia(d);
         }
-
-
     }
 
     /**

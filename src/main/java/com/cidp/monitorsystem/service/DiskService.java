@@ -23,7 +23,7 @@ public class DiskService {
             int i=0;
             for(TableEvent event : diskInfo){
                 disk = new Disk();
-                disk.setId("123.56.16.15");
+                disk.setId("39.105.59.128");
                 VariableBinding[] values = event.getColumns();
                 if(values == null ||!DISK_OID.equals(values[0].getVariable().toString()))
                     continue;
