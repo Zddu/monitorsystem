@@ -131,7 +131,7 @@ public class GetInformation {
                 "1.3.6.1.2.1.25.2.3.1.4",  //unit 存储单元大小
                 "1.3.6.1.2.1.25.2.3.1.5",  //size 总存储单元数
                 "1.3.6.1.2.1.25.2.3.1.6"}; //used 使用存储单元数;
-            target = InitSnmp.Init("123.56.16.15","161","public");//创建连接目标
+            target = InitSnmp.Init("192.168.3.108","161","public");//创建连接目标
             transport = new DefaultUdpTransportMapping();
             snmp = new Snmp(transport);//创建snmp
             snmp.listen();//监听消息
@@ -169,7 +169,7 @@ public class GetInformation {
                         "1.3.6.1.2.1.25.5.1.1.1",  //cpu
                         "1.3.6.1.2.1.25.5.1.1.2"}; //memory
         try {
-            target = InitSnmp.Init("123.56.16.15","161","public");//创建连接目标
+            target = InitSnmp.Init("112.126.66.104","161","public");//创建连接目标
             transport = new DefaultUdpTransportMapping();
             snmp = new Snmp(transport);//创建snmp
             snmp.listen();//监听消息

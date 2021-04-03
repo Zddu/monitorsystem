@@ -1,6 +1,5 @@
 package com.cidp.monitorsystem.controller;
 
-import com.cidp.monitorsystem.model.DeviceType;
 import com.cidp.monitorsystem.model.RespBean;
 import com.cidp.monitorsystem.model.SystemInfo;
 import com.cidp.monitorsystem.service.SystemService;
